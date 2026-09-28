@@ -189,6 +189,13 @@ in
         };
       };
 
+      device = [
+        {
+          name = "mouse-di-famiglia-occy";
+          sensitivity = "-0.5";
+        }
+      ];
+
       # dms viene avviato dal suo servizio systemd (programs.dms-shell.systemd.enable = true).
       "exec-once" = [
         "rm -f /tmp/hypr-monitor-init-done"
