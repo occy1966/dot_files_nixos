@@ -348,8 +348,6 @@ in
       bind = , ESCAPE, submap, reset
 
       submap = reset
-
-      hl.device({ name = "mouse-di-famiglia-occy", sensitivity = -0.5 })
     '';
   };
 }
