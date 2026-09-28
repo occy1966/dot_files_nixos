@@ -192,7 +192,7 @@ in
       device = [
         {
           name = "mouse-di-famiglia-occy";
-          sensitivity = "-0.5";
+          sensitivity = "-0.8";
         }
       ];
 
