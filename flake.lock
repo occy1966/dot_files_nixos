@@ -177,11 +177,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1791194509,
-        "narHash": "sha256-xTzTZQkRD99SL+zq4KtFbwq2yZBiTdDhLSXtacKhT00=",
+        "lastModified": 1791560414,
+        "narHash": "sha256-L5qYMe7cHq6UOb5CG0LPA8bioOZt508CdFh4kk32FiY=",
         "owner": "versenilvis",
         "repo": "iris",
-        "rev": "842349fe56fc36f02bf4de5ba02dfc0bac7f00c7",
+        "rev": "ded7e3880eae0a3808bf5238f88247ba913767b1",
         "type": "github"
       },
       "original": {
