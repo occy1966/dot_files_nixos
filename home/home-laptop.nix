@@ -31,7 +31,7 @@ in
     sync() {
       local repo=$1 dest=$2
       if [ ! -d "$dest" ]; then
-        $DRY_RUN_CMD ${pkgs.git}/bin/git clone "git@github.com:crivotz/$repo.git" "$dest"
+        $DRY_RUN_CMD ${pkgs.git}/bin/git clone "git@github.com:occy1966/$repo.git" "$dest"
       else
         $DRY_RUN_CMD ${pkgs.git}/bin/git -C "$dest" pull --ff-only --quiet || true
       fi
