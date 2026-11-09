@@ -199,5 +199,8 @@ in
     // parity with hyprland-laptop.nix's exec-once (which needs it, since Hyprland
     // doesn't honour XDG autostart).
     spawn-at-startup "forticlient-tray"
+    // nixdatifier-standalone ships no .desktop entry (just a binary), so XDG
+    // autostart wouldn't pick it up either way — explicit spawn here too.
+    spawn-at-startup "nixdatifier --autostart"
   '';
 }

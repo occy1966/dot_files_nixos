@@ -11,6 +11,7 @@
     graphviz
     plocate
     nix-graph      # nix-tree migliore
+    nixdatifier-standalone  # app standalone + tray icon: generazioni, diff pacchetti, update flake
     jq             # richiesto da core/claude/statusline.sh
     gnupg
     gnumake
@@ -54,8 +55,6 @@
     # Network / Remote
     nmap
     net-tools
-    netwatch
-    libpcap
 
     # Wayland tools
     wdisplays
@@ -79,8 +78,5 @@
     # AI
     claude-code
     github-copilot-cli
-
-    # Shell autocomplete/navigation
-    # iris
   ];
 }

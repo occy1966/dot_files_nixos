@@ -78,18 +78,6 @@
 
     initContent = ''
       #########################################################################
-      # IRIS (autocomplete/navigation context-aware)
-      # Deve stare per primo: "iris init zsh" fa "exec iris" nella shell non
-      # ancora figlia di iris, sostituendo il processo. Tutto quello che sta
-      # dopo in questo file non verrebbe mai eseguito in quella shell (né
-      # servirebbe: verrà rieseguito identico dalla shell reale che iris crea
-      # al suo posto). Mettendolo prima di tutto evitiamo di far girare due
-      # volte roba come il p10k instant prompt (che si lamenterebbe di non
-      # essere stato "chiuso" correttamente) o il tmux autostart.
-      #########################################################################
-      # eval "$(iris init zsh)"
-
-      #########################################################################
       # NIXOS BANNER
       #########################################################################
       print -P "%F{51}NixOS ''$(nixos-version | cut -d'.' -f1,2)%f"
@@ -100,6 +88,41 @@
       if [[ -r "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh" ]]; then
         source "''${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-''${(%):-%n}.zsh"
       fi
+
+      #########################################################################
+      # SSH-AGENT (persisted in ~/.ssh/environment-$HOST, reused across shells/tmux panes)
+      #########################################################################
+      zstyle :plugins:ssh-agent identities id_ed25519
+
+      function start_ssh_agent() {
+        local lifetime
+        local -a identities
+
+        zstyle -s :plugins:ssh-agent lifetime lifetime
+
+        ssh-agent -s ''${lifetime:+-t} ''${lifetime} | sed 's/^echo/#echo/' >! $ssh_environment
+        chmod 600 $ssh_environment
+        source $ssh_environment > /dev/null
+
+        zstyle -a :plugins:ssh-agent identities identities
+
+        echo starting ssh-agent...
+        ssh-add $HOME/.ssh/''${^identities}
+      }
+
+      ssh_environment="$HOME/.ssh/environment-$HOST"
+
+      if [[ -f "$ssh_environment" ]]; then
+        source $ssh_environment > /dev/null
+        ps x | grep ssh-agent | grep -q $SSH_AGENT_PID || {
+          start_ssh_agent
+        }
+      else
+        start_ssh_agent
+      fi
+
+      unset ssh_environment
+      unfunction start_ssh_agent
 
       #########################################################################
       # TMUX AUTO-START

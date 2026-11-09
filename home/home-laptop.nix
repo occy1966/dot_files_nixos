@@ -27,13 +27,16 @@ in
 
   # Clones or fast-forwards private sibling repos at every `nixos-rebuild switch`.
   home.activation.syncPrivate = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    ssh_environment="$HOME/.ssh/environment-$(cat /etc/hostname 2>/dev/null)"
+    [ -f "$ssh_environment" ] && source "$ssh_environment" > /dev/null
+    unset ssh_environment
     export GIT_SSH_COMMAND="${pkgs.openssh}/bin/ssh -i $HOME/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new -o BatchMode=yes"
     sync() {
       local repo=$1 dest=$2
       if [ ! -d "$dest" ]; then
         $DRY_RUN_CMD ${pkgs.git}/bin/git clone "git@github.com:occy1966/$repo.git" "$dest"
       else
-        $DRY_RUN_CMD ${pkgs.git}/bin/git -C "$dest" pull --ff-only --quiet || true
+        $DRY_RUN_CMD ${pkgs.git}/bin/git -C "$dest" pull --ff-only || echo "WARNING: sync failed for $repo ($dest) - see git error above" >&2
       fi
     }
     sync nubem_dot_files "$HOME/.nubem_dot_files"
@@ -70,8 +73,6 @@ in
     ".config/eza".source = config.lib.file.mkOutOfStoreSymlink "${cfg}/eza";
     # Lazygit UI config
     ".config/lazygit/config.yml" = { source = config.lib.file.mkOutOfStoreSymlink "${cfg}/lazygit/config.yml"; force = true; };
-    # IRIS shell autocomplete config
-    ".config/iris/config.toml" = { source = config.lib.file.mkOutOfStoreSymlink "${cfg}/iris/config.toml"; force = true; };
     # DankMaterialShell widget settings (bar layout, colors, etc.) — per-host file (laptop monitors: eDP-1, DP-3)
     ".config/DankMaterialShell/settings.json" = { source = config.lib.file.mkOutOfStoreSymlink "${cfg}/DankMaterialShell/settings-laptop.json"; force = true; };
     # Bat custom syntax-highlighting themes (must run `bat cache --build` after changes)
